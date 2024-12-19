@@ -1,0 +1,68 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.5/.schema/devbox.schema.json",
+  "config": {
+    "allowUnfree": true
+  },
+  "packages": [
+    "_1password@2.28.0",
+    "awscli2@2.17.13",
+    "azure-cli@2.63.0",
+    "bat@0.24.0",
+    "chezmoi@2.48.1",
+    "crossplane-cli@1.15.2",
+    "curl@8.9.1",
+    "delta@0.18.2",
+    "direnv@2.34.0",
+    "docker@27.2.0",
+    "doppler@latest",
+    "eza@0.18.16",
+    "fzf@0.55.0",
+    "gcc@latest",
+    "gh@2.56.0",
+    "git@2.46.0",
+    "glibcLocales@2.39-52",
+    "go@1.23.1",
+    "google-cloud-sdk@latest",
+    "gum@0.13.0",
+    "jq@1.7.1",
+    "just@1.30.1",
+    "kcl-cli@0.8.9",
+    "kind@0.24.0",
+    "kubectl@1.29.3",
+    "kubernetes-helm@3.14.3",
+    "kyverno-chainsaw@0.2.5",
+    "nerdctl@1.7.6",
+    "nushell@0.96.1",
+    "pipx@latest",
+    "python311Full@latest",
+    "nodejs@latest",
+    "poetry@1.8.5",
+    "ripgrep@14.1.1",
+    "thefuck@3.32",
+    "upbound@0.24.1",
+    "viddy@0.4.0",
+    "vim@9.1.0707",
+    "watchexec@1.25.1",
+    "wget@1.24.5",
+    "yq-go@4.43.1",
+    "zellij@0.40.1",
+    "zsh@5.9"
+  ],
+  "shell": {
+    "init_hook": [
+      "poetry --directory=${PWD}/run-ragged config keyring.enabled false",
+      "poetry --directory=${PWD}/run-ragged install",
+      "poetry --directory=${PWD}/run-ragged lock",
+      "poetry --directory=${PWD}/run-ragged shell",
+      "alias cat='bat --paging never --theme DarkNeon --style plain'",
+      "source <(doppler completion 2> /dev/null)"
+    ],
+    "scripts": {
+      "setup-gcloud": "gcloud auth application-default login"
+    }
+  },
+  "env": {
+    "PYTHONPATH": "${PWD}/run-ragged",
+    "GOOGLE_APPLICATION_CREDENTIALS": "${HOME}/.config/gcloud/application_default_credentials.json"
+  }
+}
