@@ -1,5 +1,5 @@
 {
-  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.10.5/.schema/devbox.schema.json",
+  "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
   "config": {
     "allowUnfree": true
   },
@@ -15,12 +15,11 @@
     "direnv@2.34.0",
     "docker@27.2.0",
     "doppler@latest",
-    "eza@0.18.16",
+    "eza@0.20.10",
     "fzf@0.55.0",
     "gcc@latest",
     "gh@2.56.0",
     "git@2.46.0",
-    "glibcLocales@2.39-52",
     "go@1.23.1",
     "google-cloud-sdk@latest",
     "gum@0.13.0",
@@ -31,7 +30,6 @@
     "kubectl@1.29.3",
     "kubernetes-helm@3.14.3",
     "kyverno-chainsaw@0.2.5",
-    "nerdctl@1.7.6",
     "nushell@0.96.1",
     "pipx@latest",
     "python311Full@latest",
@@ -45,7 +43,7 @@
     "watchexec@1.25.1",
     "wget@1.24.5",
     "yq-go@4.43.1",
-    "zellij@0.40.1",
+    "tmux@latest",
     "zsh@5.9"
   ],
   "shell": {
@@ -55,6 +53,8 @@
       "poetry --directory=${PWD}/run-ragged lock",
       "poetry --directory=${PWD}/run-ragged shell",
       "alias cat='bat --paging never --theme DarkNeon --style plain'",
+      "alias ls='eza'",
+      "alias l='eza -lb --git --color-scale'",
       "source <(doppler completion 2> /dev/null)"
     ],
     "scripts": {

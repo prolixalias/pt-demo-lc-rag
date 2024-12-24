@@ -5,20 +5,19 @@ WORKDIR /frontend
 # Copy package files for better caching
 COPY frontend/package*.json ./
 
-# Ensure all required dependencies are in package.json
-RUN npm install \
-    react-markdown@9.0.1 \
-    lucide-react@0.263.1 \
-    react@18.2.0 \
-    react-dom@18.2.0
-
-# Install all dependencies
+# Install dependencies
 RUN npm install
 
 # Copy the frontend source code
-COPY frontend/ ./
+# Make sure your local structure matches this
+COPY frontend/src ./src
+COPY frontend/public ./public
+COPY frontend/index.html .
+COPY frontend/vite.config.js .
+COPY frontend/tailwind.config.js .
+COPY frontend/postcss.config.js .
 
-# Build the frontend with error logging
+# Build the frontend
 RUN npm run build || (cat /frontend/npm-debug.log 2>/dev/null || true && exit 1)
 
 # Python dependencies stage
@@ -27,6 +26,7 @@ FROM python:3.11-slim-bullseye AS builder
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH="${PYTHONPATH}:/" \
     POETRY_VERSION=1.8.5 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_IN_PROJECT=true \
@@ -88,7 +88,7 @@ EXPOSE 8080
 
 # Add health check
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/health || exit 1
+  CMD curl -f http://localhost:8080/health || exit 1
 
 # Run the application
-CMD ["uvicorn", "app.server:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD uvicorn app.$SERVICE_TYPE:app --host 0.0.0.0 --port 8080

@@ -1,35 +1,50 @@
 [tool.poetry]
-name = "run-ragged"
-version = "0.1.0"
+name = "Albear Einstein"
+version = "0.0.2"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["Paul Talbot <prolixalias@gmail.com>"]
 readme = "README.md"
 packages = [
     { include = "app" },
 ]
 
 [tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.109.0"
 cloud-sql-python-connector = {extras = ["pg8000"], version = "^1.15.0"}
 circuitbreaker = "^2.0.0"
 python-multipart = "^0.0.9"
 fastapi-limiter = "0.1.6"
 google-cloud-aiplatform = "^1.38.0"
 google-cloud-logging = "3.11.3"
-google-cloud-monitoring = "^2.24.0" 
+google-cloud-monitoring = "^2.24.0"
 google-cloud-storage = "^2.14.0"
+config = "0.5.1"
 httpx = "0.27.2"
-langchain-cli = "0.0.35"
-langchain-community = "0.2.5"
-langchain-postgres = "^0.0.6"
-langchain-google-vertexai = "1.0.5"
+
+# LangChain ecosystem - aligned versions
 langserve = {extras = ["server"], version = ">=0.0.30"}
-pgvector = ">=0.1.6,<0.3.0"
-pydantic = "<2"
-PyPDF2 = "^3.0.0"
+
+# Database
+pgvector = "0.2.5"
 psycopg2-binary = "2.9.10"
+pg8000 = "^1.30.3"
+
+# PDF processing
+PyPDF2 = "^3.0.0"
+pypdf = "5.1.0"
+
+# Server and monitoring
 prometheus-client = "0.21.1"
-python = "^3.11"
 uvicorn = "0.34.0"
+tomli = "^2.2.1"
+
+pydantic = ">=2"
+langchain = "^0.3.13"
+langchain-community = "^0.3.13"
+langchain-core = "^0.3.28"
+langchain-google-vertexai = "^2.0.9"
+langchain-xai = "^0.1.1"
 
 [tool.poetry.group.dev.dependencies]
 langchain-cli = ">=0.0.15"
