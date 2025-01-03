@@ -2,25 +2,53 @@
 
 ```mermaid
 flowchart TD
+    %% User Input and Initial Processing
     A[User Question] --> B[Albear Prompt]
-    B --> C{Check Locally}
+    B --> C{Check Local Knowledge}
+    
+    %% Knowledge Source Decision Tree
     C -->|Found| D[Generate RAG Response]
     C -->|Not Found| E{Needs Real-time Data?}
     
-    E -->|No| F[Query Gemini]
-    E -->|Yes| G[Query Grok]
+    %% External API Paths
+    E -->|No| F[Query Gemini API]
+    E -->|Yes| G[Query Grok API]
     
+    %% Response Processing
     D --> H[Format in Albear Prompt]
     F --> H
     G --> H
     
+    %% Output and Feedback Loop
     H --> I[Response to User]
-    
     J[User Feedback] --> K[Store for Training]
     
+    %% Configuration Management
     L[Local Config] --> B
     L --> C
     L --> E
+
+    %% Debug Information Flow
+    style M fill:#f9f,stroke:#333,stroke-width:2px
+    M[Debug Info Panel] -.-> B
+    M -.-> C
+    M -.-> D
+    M -.-> F
+    M -.-> G
+    M -.-> H
+
+    %% Collaboration Status
+    N[Hamburger Menu] -.-> O[Status Report]
+    
+    %% Style Definitions
+    classDef api fill:#f96,stroke:#333,stroke-width:2px
+    classDef config fill:#9cf,stroke:#333,stroke-width:2px
+    classDef process fill:#9f9,stroke:#333,stroke-width:2px
+    
+    %% Apply Styles
+    class F,G api
+    class L config
+    class B,D,H process
 ```
 
 ## development packages
