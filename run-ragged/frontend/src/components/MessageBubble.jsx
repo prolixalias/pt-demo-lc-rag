@@ -1,46 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ThumbsUp, ThumbsDown, Bug, ChevronDown, ChevronUp, Database, Cpu, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { processRagDebugInfo } from '../utils/rag';
 
-const DebugPanel = React.memo(({ debugInfo, error }) => {
-  const processedDebugInfo = useMemo(() => {
-    if (!debugInfo && !error) return null;
-    
-    return {
-      chain_steps: [
-        {
-          step: "Retrieval",
-          details: debugInfo.retrieval || {},
-          timing: debugInfo.retrieval?.searchTime || 0
-        },
-        {
-          step: "Generation",
-          details: debugInfo.generation || {},
-          timing: debugInfo.generation?.generationTime || 0
-        }
-      ],
-      metrics: {
-        total_latency: debugInfo.performance?.totalLatency || 0,
-        tokens: {
-          prompt: debugInfo.generation?.promptTokens || 0,
-          completion: debugInfo.generation?.completionTokens || 0,
-          total: debugInfo.generation?.totalTokens || 0
-        },
-        embedding_time: debugInfo.performance?.embeddingTime || 0,
-        cache_hit: debugInfo.performance?.cacheHit || false
-      },
-      timing: {
-        start_time: debugInfo.process_start,
-        query_length: debugInfo.query_length
-      },
-      model: {
-        name: debugInfo.generation?.model || 'unknown',
-        status: debugInfo.collaboration_status || {}
-      }
-    };
-  }, [debugInfo, error]);
-
-  if (!processedDebugInfo && !error) return null;
+const DebugPanel = ({ debugInfo, error }) => {
+  const processedInfo = useMemo(() => processRagDebugInfo(debugInfo), [debugInfo]);
+  
+  if (!processedInfo && !error) return null;
 
   return (
     <div className="mt-2 p-2 bg-gray-50 rounded text-xs font-mono overflow-x-auto">
@@ -48,36 +14,34 @@ const DebugPanel = React.memo(({ debugInfo, error }) => {
         <div className="mb-2 p-2 bg-red-50 text-red-700 rounded">
           <div><strong>Error Type:</strong> {error.type}</div>
           <div><strong>Message:</strong> {error.message}</div>
-          {error.debug_context && (
-            <div><strong>Context:</strong> {JSON.stringify(error.debug_context, null, 2)}</div>
-          )}
         </div>
       )}
       
-      <div className="space-y-3">
+      <div className="space-y-2">
         <div>
           <strong>Chain Steps:</strong>
-          {processedDebugInfo.chain_steps.map((step, index) => (
-            <div key={index} className="ml-2 mt-1 p-1 border-l-2 border-gray-200">
-              <div><strong>{step.step}:</strong> {step.timing.toFixed(3)}s</div>
-              <pre className="text-xs mt-1">{JSON.stringify(step.details, null, 2)}</pre>
-            </div>
-          ))}
+          <div className="ml-2 mt-1">
+            <div>Retrieval: {processedInfo.chain_steps.retrieval.time.toFixed(3)}s</div>
+            <pre>{JSON.stringify(processedInfo.chain_steps.retrieval, null, 2)}</pre>
+            
+            <div>Generation: {processedInfo.chain_steps.generation.time.toFixed(3)}s</div>
+            <pre>{JSON.stringify(processedInfo.chain_steps.generation, null, 2)}</pre>
+          </div>
         </div>
 
         <div>
           <strong>Metrics:</strong>
-          <pre className="mt-1">{JSON.stringify(processedDebugInfo.metrics, null, 2)}</pre>
+          <pre>{JSON.stringify(processedInfo.metrics, null, 2)}</pre>
         </div>
 
         <div>
           <strong>Model:</strong>
-          <pre className="mt-1">{JSON.stringify(processedDebugInfo.model, null, 2)}</pre>
+          <pre>{JSON.stringify(processedInfo.model, null, 2)}</pre>
         </div>
       </div>
     </div>
   );
-});
+};
 
 const MessageBubble = ({ message, onToast, debugMode }) => {
   const isUser = message.type === 'user';

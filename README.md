@@ -1,6 +1,6 @@
 # run-ragged
 
-## lanchain flow
+## langchain flow diagram
 ```mermaid
 flowchart TD
     %% User Input and Initial Processing
@@ -99,6 +99,61 @@ classDiagram
     FastAPIServer --> IndexerService
     IndexerService --> ConversationMemory
     AICollaborationManager --> MetricsTracker
+```
+## Query path flow diagram
+```mermaid
+flowchart TD
+    A[Query] --> B{Contains Keywords?}
+    B -->|Weather, Sports, News| C[Realtime/Grok]
+    B -->|No Keywords| D{Vector Search}
+    D -->|Results Found| E[RAG Response]
+    D -->|No Results| F[Gemini Response]
+    
+    style C fill:#f96,stroke:#333
+    style E fill:#9f9,stroke:#333
+```
+## Query processing sequence
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant S as Server
+    participant V as VectorStore
+    participant G as Gemini
+    participant K as Grok
+    
+    U->>S: Query
+    S->>V: Search Context
+    V-->>S: Documents
+    S->>G: Query + Context
+    G-->>S: Response + requires_grok
+    alt requires_grok
+        S->>K: Query Context
+        K-->>S: Real-time Data
+        S->>G: Synthesize
+        G-->>S: Final Response
+    end
+    S->>U: Response
+```
+## Debug flow diagram
+```mermaid
+flowchart TD
+    A[User Query] --> B[Log Query Type Detection]
+    B --> C{Document Search}
+    C -->|Success| D[Log Retrieved Chunks]
+    C -->|Failure| E[Log Search Error]
+    D --> F[Log RAG Integration]
+    E --> G[Log Fallback Path]
+    F --> H{API Selection}
+    G --> H
+    H -->|Gemini| I[Log Gemini Response]
+    H -->|Grok| J[Log Grok Response]
+    I & J --> K[Log Final Response]
+    K --> L[Log UI Updates]
+    
+    style D fill:#f96
+    style E fill:#f96
+    style I fill:#f96
+    style J fill:#f96
 ```
 
 ## development packages
