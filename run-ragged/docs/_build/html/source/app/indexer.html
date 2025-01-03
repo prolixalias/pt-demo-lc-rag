@@ -1,0 +1,419 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.indexer Module &mdash; RAG Demo 0.0.209 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b5b9d494"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RAG Demo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">app.indexer Module</a><ul>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager"><code class="docutils literal notranslate"><span class="pre">DatabaseManager</span></code></a><ul>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.add_embeddings"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.add_embeddings()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.check_document_is_indexed"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.check_document_is_indexed()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.close"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.close()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.connect"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.connect()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.ensure_connection"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.ensure_connection()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.get_document_count"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_document_count()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.get_feedback_analytics"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.get_feedback_analytics()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.initialize"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.initialize()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.DatabaseManager.record_feedback"><code class="docutils literal notranslate"><span class="pre">DatabaseManager.record_feedback()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest</span></code></a><ul>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.feedback_value"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.feedback_value</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.message_id"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.message_id</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.metadata"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.metadata</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.model_computed_fields</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.model_config"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.model_config</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.model_fields"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.model_fields</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.FeedbackRequest.source_context"><code class="docutils literal notranslate"><span class="pre">FeedbackRequest.source_context</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.indexer.IndexRequest"><code class="docutils literal notranslate"><span class="pre">IndexRequest</span></code></a><ul>
+<li><a class="reference internal" href="#app.indexer.IndexRequest.files"><code class="docutils literal notranslate"><span class="pre">IndexRequest.files</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.IndexRequest.model_computed_fields"><code class="docutils literal notranslate"><span class="pre">IndexRequest.model_computed_fields</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.IndexRequest.model_config"><code class="docutils literal notranslate"><span class="pre">IndexRequest.model_config</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.IndexRequest.model_fields"><code class="docutils literal notranslate"><span class="pre">IndexRequest.model_fields</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.indexer.add_feedback"><code class="docutils literal notranslate"><span class="pre">add_feedback()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.detailed_health_check"><code class="docutils literal notranslate"><span class="pre">detailed_health_check()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.favicon"><code class="docutils literal notranslate"><span class="pre">favicon()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.get_indexing_status"><code class="docutils literal notranslate"><span class="pre">get_indexing_status()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.health_check"><code class="docutils literal notranslate"><span class="pre">health_check()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.lifespan"><code class="docutils literal notranslate"><span class="pre">lifespan()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.process_pdf"><code class="docutils literal notranslate"><span class="pre">process_pdf()</span></code></a></li>
+<li><a class="reference internal" href="#app.indexer.trigger_indexing"><code class="docutils literal notranslate"><span class="pre">trigger_indexing()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RAG Demo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">app.indexer Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/app/indexer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-app.indexer">
+<span id="app-indexer-module"></span><h1>app.indexer Module<a class="headerlink" href="#module-app.indexer" title="Link to this heading"></a></h1>
+<p>Indexer Service for Processing PDF Documents and Managing Embeddings.</p>
+<dl class="simple">
+<dt>This service is responsible for:</dt><dd><ul class="simple">
+<li><p>Processing PDF documents stored in Google Cloud Storage (GCS).</p></li>
+<li><p>Converting the text content of PDFs into vector embeddings using Vertex AI.</p></li>
+<li><p>Storing the document embeddings in a PostgreSQL database with the pgvector extension.</p></li>
+<li><p>Providing health check endpoints to monitor service status and connections.</p></li>
+<li><p>Allowing feedback to be recorded and analyzed.</p></li>
+</ul>
+</dd>
+<dt>Key Components:</dt><dd><ul class="simple">
+<li><p>FastAPI: Web framework for building APIs.</p></li>
+<li><p>Google Cloud Storage (GCS): Stores PDF documents.</p></li>
+<li><p>Cloud SQL (PostgreSQL) with pgvector: Stores document embeddings.</p></li>
+<li><p>Vertex AI: Provides embeddings and LLM capabilities.</p></li>
+<li><p>Asynchronous Operations: Utilizes asyncio for non-blocking I/O operations.</p></li>
+<li><p>Configuration: Uses environment variables for customizable settings.</p></li>
+</ul>
+</dd>
+<dt>Environment Variables (Required):</dt><dd><ul class="simple">
+<li><p>DB_INSTANCE_NAME: Cloud SQL instance connection name.</p></li>
+<li><p>DB_NAME: Database name.</p></li>
+<li><p>DB_PASS: Database password.</p></li>
+<li><p>DB_USER: Database username.</p></li>
+<li><p>PDF_BUCKET_NAME: GCS bucket name for PDF storage.</p></li>
+</ul>
+</dd>
+<dt>Environment Variables (Optional):</dt><dd><ul class="simple">
+<li><p>CHUNK_OVERLAP: Overlap between text chunks for embedding (default: 50).</p></li>
+<li><p>CHUNK_SIZE: Size of each text chunk for embedding (default: 2000).</p></li>
+<li><p>EMBEDDING_BATCH_SIZE: Number of embeddings to process in a single batch (default: 10).</p></li>
+<li><p>MAX_CHUNKS: Maximum number of chunks to process in a single batch (default: 50).</p></li>
+<li><p>MAX_FILE_SIZE: Maximum file size in bytes for PDF processing (default: 100MB).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">DatabaseManager</span></span><a class="headerlink" href="#app.indexer.DatabaseManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages database operations and connections.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.add_embeddings">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadatas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#app.indexer.DatabaseManager.add_embeddings" title="Link to this definition"></a></dt>
+<dd><p>Adds embeddings to the database in batches.
+:param texts: List of text content to be embedded.
+:type texts: List[str]
+:param metadatas: List of metadata dictionaries for each text.
+:type metadatas: List[dict]
+:param batch_size: Size of each batch for processing embeddings (default: EMBEDDING_BATCH_SIZE).
+:type batch_size: int</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The total number of embeddings added to the database.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.check_document_is_indexed">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_document_is_indexed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#app.indexer.DatabaseManager.check_document_is_indexed" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Checks if a document (by source) is already fully indexed by looking for
+the <cite>is_embedded</cite> metadata flag.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> – The source of the document</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.close">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.DatabaseManager.close" title="Link to this definition"></a></dt>
+<dd><p>Closes the database connection.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.connect">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.DatabaseManager.connect" title="Link to this definition"></a></dt>
+<dd><p>Establishes an asynchronous connection to the PostgreSQL database.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.ensure_connection">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ensure_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.DatabaseManager.ensure_connection" title="Link to this definition"></a></dt>
+<dd><p>Ensures the database connection is alive. Reconnects if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the connection is healthy, False otherwise.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.get_document_count">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_document_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#app.indexer.DatabaseManager.get_document_count" title="Link to this definition"></a></dt>
+<dd><p>Retrieves the count of documents in the <cite>document_embeddings</cite> table.
+:returns: Count of documents in the table.
+:rtype: int</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.get_feedback_analytics">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_feedback_analytics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#app.indexer.DatabaseManager.get_feedback_analytics" title="Link to this definition"></a></dt>
+<dd><p>Retrieves analytics about feedback patterns.
+:returns: List of dictionaries containing feedback analytics.
+:rtype: List[Dict[str, Any]]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.initialize">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.DatabaseManager.initialize" title="Link to this definition"></a></dt>
+<dd><p>Initializes the database schema, including creating the pgvector extension
+and the necessary tables for document embeddings and message feedback.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.indexer.DatabaseManager.record_feedback">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">record_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.DatabaseManager.record_feedback" title="Link to this definition"></a></dt>
+<dd><p>Records message feedback in the database.
+:param message_id: ID of the message for which feedback is recorded.
+:type message_id: int
+:param feedback_value: Value of the feedback (e.g., “positive”, “negative”).
+:type feedback_value: str
+:param source_context: Optional context of the message source (e.g. metadata).
+:type source_context: Optional[dict]
+:param metadata: Optional additional metadata for the feedback.
+:type metadata: Optional[dict]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">FeedbackRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.FeedbackRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Schema for feedback request.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.feedback_value">
+<span class="sig-name descname"><span class="pre">feedback_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.feedback_value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.message_id">
+<span class="sig-name descname"><span class="pre">message_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.message_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.model_computed_fields" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'feedback_value':</span> <span class="pre">FieldInfo(annotation=str,</span> <span class="pre">required=True),</span> <span class="pre">'message_id':</span> <span class="pre">FieldInfo(annotation=int,</span> <span class="pre">required=True),</span> <span class="pre">'metadata':</span> <span class="pre">FieldInfo(annotation=Union[dict,</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None),</span> <span class="pre">'source_context':</span> <span class="pre">FieldInfo(annotation=Union[dict,</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None)}</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.FeedbackRequest.source_context">
+<span class="sig-name descname"><span class="pre">source_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.indexer.FeedbackRequest.source_context" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.indexer.IndexRequest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">IndexRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.IndexRequest" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
+<p>Schema for index request payload.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.IndexRequest.files">
+<span class="sig-name descname"><span class="pre">files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.indexer.IndexRequest.files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.IndexRequest.model_computed_fields">
+<span class="sig-name descname"><span class="pre">model_computed_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComputedFieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.indexer.IndexRequest.model_computed_fields" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of computed field names and their corresponding <cite>ComputedFieldInfo</cite> objects.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.IndexRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">ConfigDict</span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#app.indexer.IndexRequest.model_config" title="Link to this definition"></a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.indexer.IndexRequest.model_fields">
+<span class="sig-name descname"><span class="pre">model_fields</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ClassVar</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">FieldInfo</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'files':</span> <span class="pre">FieldInfo(annotation=Union[List[str],</span> <span class="pre">NoneType],</span> <span class="pre">required=False,</span> <span class="pre">default=None,</span> <span class="pre">description='List</span> <span class="pre">of</span> <span class="pre">files</span> <span class="pre">to</span> <span class="pre">index')}</span></em><a class="headerlink" href="#app.indexer.IndexRequest.model_fields" title="Link to this definition"></a></dt>
+<dd><p>Metadata about the fields defined on the model,
+mapping of field names to [<cite>FieldInfo</cite>][pydantic.fields.FieldInfo] objects.</p>
+<p>This replaces <cite>Model.__fields__</cite> from Pydantic V1.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.add_feedback">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">add_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="server.html#app.indexer.FeedbackRequest" title="app.indexer.FeedbackRequest"><span class="pre">FeedbackRequest</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.add_feedback" title="Link to this definition"></a></dt>
+<dd><p>Record message feedback.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.detailed_health_check">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">detailed_health_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.detailed_health_check" title="Link to this definition"></a></dt>
+<dd><p>Detailed health check endpoint that checks all connections.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.favicon">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">favicon</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.favicon" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.get_indexing_status">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">get_indexing_status</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.get_indexing_status" title="Link to this definition"></a></dt>
+<dd><p>Get current indexing status.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.health_check">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">health_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.health_check" title="Link to this definition"></a></dt>
+<dd><p>Basic health check endpoint.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.lifespan">
+<span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">lifespan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FastAPI</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.lifespan" title="Link to this definition"></a></dt>
+<dd><p>Lifespan context manager for FastAPI application.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.process_pdf">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">process_pdf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">blob_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#app.indexer.process_pdf" title="Link to this definition"></a></dt>
+<dd><p>Processes a single PDF file from GCS bucket into vector embeddings.
+:param blob_name: The name of the blob to process
+:type blob_name: str</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of embedded document chunks</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="app.indexer.trigger_indexing">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.indexer.</span></span><span class="sig-name descname"><span class="pre">trigger_indexing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="server.html#app.indexer.IndexRequest" title="app.indexer.IndexRequest"><span class="pre">IndexRequest</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">background_tasks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BackgroundTasks</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.indexer.trigger_indexing" title="Link to this definition"></a></dt>
+<dd><p>Trigger document indexing.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 1980, Paul Talbot.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

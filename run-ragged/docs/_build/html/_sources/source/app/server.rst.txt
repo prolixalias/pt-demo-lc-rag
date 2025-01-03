@@ -1,0 +1,7 @@
+app.indexer Module
+============================
+
+.. automodule:: app.indexer
+      :members:
+      :undoc-members:
+      :show-inheritance:

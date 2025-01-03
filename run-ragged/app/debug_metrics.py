@@ -1,137 +1,159 @@
+"""
+Metrics Tracking Implementation Module.
+
+This module provides classes for tracking performance metrics
+within the RAG (Retrieval Augmented Generation) pipeline.
+It includes detailed timing for each processing phase, tracks
+token usage, retrieval statistics, and LLM configuration.
+
+Classes:
+    - PhaseMetrics:  Tracks metrics for a specific phase of processing.
+    - RAGMetrics: Manages overall metrics for the RAG pipeline.
+"""
+
+import logging
+import time
+from app.logging_config import setup_logging
+from contextlib import contextmanager
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
+from typing import Dict, List, Optional
+
+# Initialize logging with appropriate level
+setup_logging()
+logger = logging.getLogger(__name__)
 
 @dataclass
-class RAGMetrics:
-    # Content Analysis
-    query_length: int = 0
-    response_length: int = 0
-    num_sources_cited: int = 0
-    context_length: int = 0
-    document_chunks_used: int = 0
-    
-    # Vector Search
-    similarity_scores: List[float] = None
-    nearest_neighbors_distance: float = 0.0
-    similarity_threshold_used: float = 0.0
-    reranking_applied: bool = False
-    chunk_overlap_percentage: float = 0.0
-    
-    # Token Usage
-    prompt_template_tokens: int = 0
-    context_tokens: int = 0
-    query_tokens: int = 0
-    response_tokens: int = 0
-    total_cost: float = 0.0
-    
-    # Memory
-    conversation_turns: int = 0
-    total_tokens_in_memory: int = 0
-    memory_window_size: int = 0
-    pruned_messages: int = 0
-    
-    # Performance Timing
-    embedding_generation_time: float = 0.0
-    vector_search_time: float = 0.0
-    context_processing_time: float = 0.0
-    llm_generation_time: float = 0.0
-    post_processing_time: float = 0.0
-    total_latency: float = 0.0
+class PhaseMetrics:
+    """Metrics for a specific phase of processing."""
+    start_time: float
+    end_time: Optional[float] = None
+    success: bool = True
+    error: Optional[str] = None
+    details: Dict = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert metrics to structured dictionary format"""
-        raw_dict = asdict(self)
+    @property
+    def duration(self) -> float:
+        """Calculate phase duration in seconds"""
+        if self.end_time is None:
+            return 0
+        return self.end_time - self.start_time
+
+    def to_dict(self) -> Dict:
+        """Returns the metrics for the phase as a dictionary"""
         return {
-            "content_analysis": {
-                "query_length": raw_dict["query_length"],
-                "response_length": raw_dict["response_length"],
-                "num_sources_cited": raw_dict["num_sources_cited"],
-                "context_length": raw_dict["context_length"],
-                "document_chunks_used": raw_dict["document_chunks_used"]
-            },
-            "vector_search": {
-                "similarity_scores": raw_dict["similarity_scores"] or [],
-                "nearest_neighbors_distance": raw_dict["nearest_neighbors_distance"],
-                "similarity_threshold_used": raw_dict["similarity_threshold_used"],
-                "reranking_applied": raw_dict["reranking_applied"],
-                "chunk_overlap_percentage": raw_dict["chunk_overlap_percentage"]
-            },
-            "token_usage": {
-                "prompt_template_tokens": raw_dict["prompt_template_tokens"],
-                "context_tokens": raw_dict["context_tokens"],
-                "query_tokens": raw_dict["query_tokens"],
-                "response_tokens": raw_dict["response_tokens"],
-                "total_cost": raw_dict["total_cost"]
-            },
-            "memory": {
-                "conversation_turns": raw_dict["conversation_turns"],
-                "total_tokens_in_memory": raw_dict["total_tokens_in_memory"],
-                "memory_window_size": raw_dict["memory_window_size"],
-                "pruned_messages": raw_dict["pruned_messages"]
-            },
-            "timing": {
-                "embedding_generation": raw_dict["embedding_generation_time"],
-                "vector_search": raw_dict["vector_search_time"],
-                "context_processing": raw_dict["context_processing_time"],
-                "llm_generation": raw_dict["llm_generation_time"],
-                "post_processing": raw_dict["post_processing_time"],
-                "total_latency": raw_dict["total_latency"]
-            }
+            "duration": round(self.duration, 3),
+            "success": self.success,
+            "error": self.error,
+            "details": self.details
         }
 
-class MetricsTracker:
+class RAGMetrics:
+    """Enhanced metrics tracking for RAG pipeline"""
     def __init__(self):
-        self.start_time = datetime.now()
-        self.metrics = RAGMetrics()
-        self._current_phase_start = None
+        """Initializes the RAGMetrics object with tracking data"""
+        self.phases: Dict[str, PhaseMetrics] = {}
+        self.start_time = time.time()
+        self.logger = logging.getLogger(__name__)
+        
+        # Accumulated metrics
+        self.token_counts = {
+            "prompt": 0,
+            "completion": 0,
+            "total": 0
+        }
+        self.retrieval_stats = {
+            "chunks_retrieved": 0,
+            "avg_relevance_score": 0.0,
+            "sources_used": set()
+        }
+        self.llm_stats = {
+            "model_name": "",
+            "temperature": 0.0,
+            "max_tokens": 0
+        }
+
+    @contextmanager
+    def track_phase(self, phase_name: str):
+        """Context manager for tracking phase metrics"""
+        self.start_phase(phase_name)
+        try:
+            yield self
+        except Exception as e:
+            self.end_phase(phase_name, success=False, error=str(e))
+            raise
+        finally:
+            if phase_name in self.phases and self.phases[phase_name].end_time is None:
+                self.end_phase(phase_name)
 
     def start_phase(self, phase_name: str):
-        self._current_phase_start = datetime.now()
-        return self
+        """Start timing a new phase"""
+        self.phases[phase_name] = PhaseMetrics(start_time=time.time())
+        self.logger.debug(f"Started phase: {phase_name}")
 
-    def end_phase(self, phase_name: str):
-        if self._current_phase_start:
-            duration = (datetime.now() - self._current_phase_start).total_seconds()
-            if phase_name == "embedding":
-                self.metrics.embedding_generation_time = duration
-            elif phase_name == "vector_search":
-                self.metrics.vector_search_time = duration
-            elif phase_name == "context_processing":
-                self.metrics.context_processing_time = duration
-            elif phase_name == "llm_generation":
-                self.metrics.llm_generation_time = duration
-            elif phase_name == "post_processing":
-                self.metrics.post_processing_time = duration
-        self._current_phase_start = None
+    def end_phase(self, phase_name: str, success: bool = True, error: Optional[str] = None):
+        """End timing for a phase"""
+        if phase_name in self.phases:
+            self.phases[phase_name].end_time = time.time()
+            self.phases[phase_name].success = success
+            self.phases[phase_name].error = error
+            self.logger.debug(f"Ended phase: {phase_name} (success={success})")
 
-    def update_content_metrics(self, query: str, response: str, context: str, docs: List[Any]):
-        self.metrics.query_length = len(query)
-        self.metrics.response_length = len(response)
-        self.metrics.context_length = len(context)
-        self.metrics.document_chunks_used = len(docs)
-        self.metrics.num_sources_cited = len(set(doc.metadata.get('source') for doc in docs))
+    def update_token_counts(self, prompt_tokens: int, completion_tokens: int):
+        """Update token usage metrics"""
+        self.token_counts["prompt"] += prompt_tokens
+        self.token_counts["completion"] += completion_tokens
+        self.token_counts["total"] = self.token_counts["prompt"] + self.token_counts["completion"]
 
-    def update_search_metrics(self, similarity_scores: List[float], threshold: float = 0.0):
-        self.metrics.similarity_scores = similarity_scores
-        self.metrics.similarity_threshold_used = threshold
-        if similarity_scores:
-            self.metrics.nearest_neighbors_distance = min(similarity_scores)
+    def update_retrieval_stats(self, chunks: int, scores: List[float], sources: List[str]):
+        """Update retrieval statistics"""
+        self.retrieval_stats["chunks_retrieved"] = chunks
+        if scores:
+            self.retrieval_stats["avg_relevance_score"] = sum(scores) / len(scores)
+        self.retrieval_stats["sources_used"].update(sources)
 
-    def update_token_metrics(self, prompt_tokens: int, context_tokens: int, 
-                           query_tokens: int, response_tokens: int, cost_per_token: float = 0.0):
-        self.metrics.prompt_template_tokens = prompt_tokens
-        self.metrics.context_tokens = context_tokens
-        self.metrics.query_tokens = query_tokens
-        self.metrics.response_tokens = response_tokens
-        self.metrics.total_cost = (prompt_tokens + context_tokens + query_tokens + response_tokens) * cost_per_token
+    def update_llm_stats(self, model_name: str, temperature: float, max_tokens: int):
+        """Update LLM configuration stats"""
+        self.llm_stats.update({
+            "model_name": model_name,
+            "temperature": temperature,
+            "max_tokens": max_tokens
+        })
 
-    def update_memory_metrics(self, conversation_history: List[Any], window_size: int, pruned: int = 0):
-        self.metrics.conversation_turns = len(conversation_history)
-        self.metrics.memory_window_size = window_size
-        self.metrics.pruned_messages = pruned
-        self.metrics.total_tokens_in_memory = sum(len(msg.get('content', '')) for msg in conversation_history)
+    def get_metrics(self) -> Dict:
+        """Get complete metrics report"""
+        total_duration = time.time() - self.start_time
+        
+        return {
+            "overall": {
+                "total_duration": round(total_duration, 3),
+                "success": all(phase.success for phase in self.phases.values()),
+                "timestamp": datetime.utcnow().isoformat()
+            },
+            "phases": {
+                name: phase.to_dict() 
+                for name, phase in self.phases.items()
+            },
+            "tokens": self.token_counts,
+            "retrieval": {
+                **self.retrieval_stats,
+                "sources_used": list(self.retrieval_stats["sources_used"])
+            },
+            "llm": self.llm_stats
+        }
 
-    def finalize(self) -> Dict[str, Any]:
-        self.metrics.total_latency = (datetime.now() - self.start_time).total_seconds()
-        return self.metrics.to_dict()
+    def log_debug_info(self, message: str, **kwargs):
+        """Log debug information with current context"""
+        current_phase = next(
+            (name for name, phase in self.phases.items() 
+             if phase.end_time is None),
+            None
+        )
+        
+        context = {
+            "current_phase": current_phase,
+            "elapsed_time": time.time() - self.start_time,
+            **kwargs
+        }
+        
+        self.logger.debug(f"{message} | Context: {context}")

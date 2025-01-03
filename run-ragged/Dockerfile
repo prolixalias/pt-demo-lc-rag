@@ -5,6 +5,9 @@ WORKDIR /frontend
 # Copy package files for better caching
 COPY frontend/package*.json ./
 
+# Install specific npm version
+RUN npm install -g npm@11.0.0
+
 # Install dependencies
 RUN npm install
 
@@ -36,6 +39,9 @@ ENV PYTHONUNBUFFERED=1 \
 # Create a virtual environment for the project
 WORKDIR /code
 RUN python -m venv $VIRTUAL_ENV
+
+# Update pip
+RUN pip install --upgrade pip
 
 # Install Poetry inside the virtual environment to reduce image size
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"

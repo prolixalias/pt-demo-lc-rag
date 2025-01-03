@@ -1,0 +1,77 @@
+# Python dependencies stage
+FROM python:3.11-slim-bullseye AS python-builder
+
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH="${PYTHONPATH}:/" \
+    POETRY_VERSION=1.8.5 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_NO_INTERACTION=1 \
+    VIRTUAL_ENV="/code/.venv"
+
+WORKDIR /code
+RUN python -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
+
+COPY pyproject.toml poetry.lock README.md ./
+RUN poetry lock --no-update && poetry install --no-root --no-cache --no-interaction --no-ansi
+
+# Base runtime image
+FROM python:3.11-slim-bullseye AS base
+
+COPY --from=python-builder /code/.venv /code/.venv
+ENV PATH="/code/.venv/bin:$PATH"
+
+WORKDIR /code
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends -o APT::Immediate-Configure=false \
+      libpq5 libpq-dev gcc g++ curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY pyproject.toml poetry.lock README.md ./
+RUN poetry lock --no-update && poetry install --no-interaction --no-ansi
+
+RUN adduser --disabled-password --gecos "" appuser \
+    && chown -R appuser:appuser /code
+
+USER appuser
+
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Frontend build stage
+FROM node:20 AS frontend-builder
+WORKDIR /frontend
+
+COPY frontend/package*.json ./
+RUN npm install
+
+COPY frontend/src ./src
+COPY frontend/public ./public
+COPY frontend/index.html .
+COPY frontend/vite.config.js .
+COPY frontend/tailwind.config.js .
+COPY frontend/postcss.config.js .
+
+RUN npm run build || (cat /frontend/npm-debug.log 2>/dev/null || true && exit 1)
+
+# Server target
+FROM base AS server
+
+COPY ./app /code/app
+COPY --from=frontend-builder /frontend/dist /code/frontend/dist
+COPY --from=frontend-builder /frontend/public/assets /code/frontend/public/assets
+
+CMD uvicorn app.$SERVICE_TYPE:app --host 0.0.0.0 --port 8080
+
+# Indexer target
+FROM base AS indexer
+
+COPY ./app /code/app
+
+CMD uvicorn app.$SERVICE_TYPE:app --host 0.0.0.0 --port 8080

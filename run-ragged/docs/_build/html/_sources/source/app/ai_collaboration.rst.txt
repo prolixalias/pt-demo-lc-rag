@@ -1,0 +1,7 @@
+app.ai_collaboration Module
+============================
+
+.. automodule:: app.ai_collaboration
+   :members:
+   :undoc-members:
+   :show-inheritance:

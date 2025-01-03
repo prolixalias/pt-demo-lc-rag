@@ -1,46 +1,50 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { ThumbsUp, ThumbsDown, Bug, ChevronDown, ChevronUp, Database, Cpu, Sparkles } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { processRagDebugInfo } from '../utils/rag';
+import { toast } from 'react-toastify';
 
-const DebugPanel = React.memo(({ debugInfo, error }) => {
-  const processedDebugInfo = useMemo(() => {
-    if (!debugInfo && !error) return null;
-    
+
+const DebugPanel = ({ debugInfo, error }) => {
+  const processedInfo = useMemo(() => {
+    console.log('Processing debug info:', debugInfo);
+    if (!debugInfo) return null;
+
+    const retrievalPhase = debugInfo.phases?.retrieval || {};
+    const generationPhase = debugInfo.phases?.generation || {};
+
     return {
-      chain_steps: [
-        {
-          step: "Retrieval",
-          details: debugInfo.retrieval || {},
-          timing: debugInfo.retrieval?.searchTime || 0
+      chain_steps: {
+        retrieval: {
+          time: debugInfo.phases?.retrieval?.duration || 0,
+          chunks_retrieved: debugInfo.retrieval?.chunks_retrieved || 0,
+          avg_relevance_score: debugInfo.retrieval?.avg_relevance_score || 0,
+          sources_used: debugInfo.retrieval?.sources_used || []
         },
-        {
-          step: "Generation",
-          details: debugInfo.generation || {},
-          timing: debugInfo.generation?.generationTime || 0
+        generation: {
+          time: debugInfo.phases?.generation?.duration || 0,
+          details: debugInfo.phases?.generation?.details || {}
         }
-      ],
-      metrics: {
-        total_latency: debugInfo.performance?.totalLatency || 0,
-        tokens: {
-          prompt: debugInfo.generation?.promptTokens || 0,
-          completion: debugInfo.generation?.completionTokens || 0,
-          total: debugInfo.generation?.totalTokens || 0
-        },
-        embedding_time: debugInfo.performance?.embeddingTime || 0,
-        cache_hit: debugInfo.performance?.cacheHit || false
       },
-      timing: {
-        start_time: debugInfo.process_start,
-        query_length: debugInfo.query_length
+      metrics: {
+        total_latency: debugInfo.overall?.total_duration || 0,
+        tokens: debugInfo.tokens || {
+          prompt: 0,
+          completion: 0,
+          total: 0
+        },
+        embedding_time: debugInfo.phases?.embedding?.duration || 0
       },
       model: {
-        name: debugInfo.generation?.model || 'unknown',
-        status: debugInfo.collaboration_status || {}
+        name: debugInfo.llm?.model_name || 'unknown',
+        status: debugInfo.llm || {}
       }
     };
-  }, [debugInfo, error]);
+  }, [debugInfo]);
 
-  if (!processedDebugInfo && !error) return null;
+  console.log('Processed debug info:', processedInfo);
+
+  if (!processedInfo && !error) return null;
 
   return (
     <div className="mt-2 p-2 bg-gray-50 rounded text-xs font-mono overflow-x-auto">
@@ -48,41 +52,48 @@ const DebugPanel = React.memo(({ debugInfo, error }) => {
         <div className="mb-2 p-2 bg-red-50 text-red-700 rounded">
           <div><strong>Error Type:</strong> {error.type}</div>
           <div><strong>Message:</strong> {error.message}</div>
-          {error.debug_context && (
-            <div><strong>Context:</strong> {JSON.stringify(error.debug_context, null, 2)}</div>
-          )}
         </div>
       )}
-      
-      <div className="space-y-3">
+
+      <div className="space-y-2">
         <div>
           <strong>Chain Steps:</strong>
-          {processedDebugInfo.chain_steps.map((step, index) => (
-            <div key={index} className="ml-2 mt-1 p-1 border-l-2 border-gray-200">
-              <div><strong>{step.step}:</strong> {step.timing.toFixed(3)}s</div>
-              <pre className="text-xs mt-1">{JSON.stringify(step.details, null, 2)}</pre>
-            </div>
-          ))}
+          <div className="ml-2 mt-1">
+            <div>Retrieval: {processedInfo.chain_steps.retrieval.time.toFixed(3)}s</div>
+            <pre className="text-xs mt-1">{JSON.stringify({
+              chunks_retrieved: processedInfo.chain_steps.retrieval.chunks_retrieved,
+              avg_relevance_score: processedInfo.chain_steps.retrieval.avg_relevance_score,
+              sources_used: processedInfo.chain_steps.retrieval.sources_used
+            }, null, 2)}</pre>
+
+            <div className="mt-2">Generation: {processedInfo.chain_steps.generation.time.toFixed(3)}s</div>
+            <pre className="text-xs mt-1">{JSON.stringify(processedInfo.chain_steps.generation.details, null, 2)}</pre>
+          </div>
         </div>
 
         <div>
           <strong>Metrics:</strong>
-          <pre className="mt-1">{JSON.stringify(processedDebugInfo.metrics, null, 2)}</pre>
+          <pre className="text-xs mt-1">{JSON.stringify({
+            total_latency: processedInfo.metrics.total_latency.toFixed(3),
+            tokens: processedInfo.metrics.tokens,
+            embedding_time: processedInfo.metrics.embedding_time.toFixed(3)
+          }, null, 2)}</pre>
         </div>
 
         <div>
           <strong>Model:</strong>
-          <pre className="mt-1">{JSON.stringify(processedDebugInfo.model, null, 2)}</pre>
+          <pre className="text-xs mt-1">{JSON.stringify(processedInfo.model, null, 2)}</pre>
         </div>
       </div>
     </div>
   );
-});
+};
 
-const MessageBubble = ({ message, onToast, debugMode }) => {
+export const MessageBubble = ({ message, debugMode }) => { // <-- Named export: export const MessageBubble = ...
   const isUser = message.type === 'user';
   const [feedback, setFeedback] = useState(message.feedback);
   const [isExpanded, setIsExpanded] = useState(false);
+
 
   useEffect(() => {
     if (!isUser) {
@@ -127,22 +138,16 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
       }
 
       setFeedback(value);
-      if (onToast) {
-        onToast({
-          message: value === 'positive'
-            ? 'Thank you for the positive feedback!'
-            : 'Thank you for your feedback',
-          type: value === 'positive' ? 'success' : 'info'
-        });
+      if (value === 'positive') {
+        toast.success('Thank you for the positive feedback!');
+      } else {
+        toast.info('Thank you for your feedback');
       }
+
     } catch (error) {
       console.error('Feedback submission error:', error);
-      if (onToast) {
-        onToast({
-          message: 'Failed to submit feedback: ' + error.message,
-          type: 'error'
-        });
-      }
+      toast.error('Failed to submit feedback: ' + error.message);
+
     }
   };
 
@@ -154,18 +159,19 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
       response: message.response,
       fullMessage: message
     });
-    
+
     if (typeof message === 'string') return message;
-    
-    return message.answer || 
-           message.content || 
-           message.response || 
-           (message.metadata && message.metadata.content) || 
-           '';
+
+    return message.answer ||
+      message.content ||
+      message.response ||
+      (message.metadata && message.metadata.content) ||
+      '';
   }, [message]);
 
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
+      {/* Message Content */}
       <div
         className={`
           relative
@@ -185,7 +191,7 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
         {/* Generation Method Badge */}
         {!isUser && (
           <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-gray-100/80 text-xs text-gray-600">
-            {message.metadata?.sources?.length > 0 ? (
+            {message.metadata?.retrieval_stats?.sources && message.metadata.retrieval_stats.sources.length > 0 ? (
               <>
                 <Database className="w-3 h-3" />
                 <span>RAG</span>
@@ -241,7 +247,7 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
                       Debug Info
                       {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                     </button>
-                    
+
                     {isExpanded && (
                       <DebugPanel
                         debugInfo={message.metadata?.debug || message.debug_info}
@@ -263,22 +269,20 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => handleFeedback('positive')}
-                    className={`p-1.5 rounded-full transition-all duration-200 ${
-                      feedback === 'positive'
+                    className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'positive'
                         ? 'text-green-600 bg-green-100'
                         : 'text-gray-400 hover:text-green-500 hover:bg-green-50'
-                    }`}
+                      }`}
                     title="Helpful"
                   >
                     <ThumbsUp className="w-3 h-3" />
                   </button>
                   <button
                     onClick={() => handleFeedback('negative')}
-                    className={`p-1.5 rounded-full transition-all duration-200 ${
-                      feedback === 'negative'
+                    className={`p-1.5 rounded-full transition-all duration-200 ${feedback === 'negative'
                         ? 'text-red-600 bg-red-100'
                         : 'text-gray-400 hover:text-red-500 hover:bg-red-50'
-                    }`}
+                      }`}
                     title="Not helpful"
                   >
                     <ThumbsDown className="w-3 h-3" />
@@ -303,4 +307,4 @@ const MessageBubble = ({ message, onToast, debugMode }) => {
   );
 };
 
-export default MessageBubble;
+// export default MessageBubble;

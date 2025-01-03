@@ -1,22 +1,47 @@
-from typing import List, Dict, Optional
-from datetime import datetime
-from dataclasses import dataclass, field
+"""
+Conversation History Management Module.
+
+This module provides classes for managing and storing conversation history,
+including options for persistence and security filtering. It's designed
+to maintain context for AI interactions within a RAG system.
+
+Key Features:
+    - Tracks conversation context, source files, and confidence scores.
+    - Manages a fixed-size rolling window of conversation history.
+    - Supports optional persistence of conversation turns to a vector store.
+    - Implements security filtering to remove sensitive information.
+    - Provides a method to retrieve relevant history based on user feedback and embeddings.
+
+Classes:
+    - ConversationContext: Manages context for a specific interaction
+    - ConversationTurn: Represents a single interaction with metadata
+    - ConversationMemory: Manages conversation history and data persistence
+
+"""
+
 import json
-from collections import deque
 import logging
 import re
+from app.logging_config import setup_logging
+from collections import deque
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import List, Dict, Optional
 
+# Initialize logging with appropriate level
+setup_logging()
 logger = logging.getLogger(__name__)
 
 @dataclass
 class ConversationContext:
     """Tracks conversation context and source information"""
-    raw_context: str  # Original RAG context
-    sanitized_context: str  # Cleaned version for AI collaboration
+    raw_context: str
+    sanitized_context: str
     source_files: List[str] = field(default_factory=list)
     confidence_score: float = 1.0
 
     def to_dict(self) -> Dict:
+        """Returns the context as a dictionary."""
         return {
             "sanitized_context": self.sanitized_context,
             "source_files": self.source_files,
@@ -25,11 +50,11 @@ class ConversationContext:
 
 @dataclass
 class ConversationTurn:
-    """Represents a single turn in the conversation"""
+    """Represents a single turn in the conversation."""
     query: str
     response: str
     timestamp: datetime = field(default_factory=datetime.utcnow)
-    feedback: Optional[bool] = None  # True for thumbs-up, False for thumbs-down
+    feedback: Optional[bool] = None
     feedback_weight: float = field(default=1.0)
     metadata: Dict = field(default_factory=dict)
     context: Optional[ConversationContext] = None
@@ -43,6 +68,7 @@ class ConversationTurn:
         # If no feedback (None), weight stays at default 1.0
 
     def to_dict(self) -> Dict:
+        """Returns the turn data as a dictionary."""
         return {
             "query": self.query,
             "response": self.response,
@@ -71,6 +97,14 @@ class ConversationMemory:
         vectorstore: Optional[object] = None,  # PGVector instance if available
         enable_persistence: bool = False
     ):
+        """
+        Initializes the ConversationMemory object.
+
+        Args:
+            max_turns (int): The maximum number of turns to store in history.
+            vectorstore (Optional[object]): Optional vectorstore for persistence
+            enable_persistence (bool): Whether to enable persistence of turns
+        """
         self.max_turns = max_turns
         self.history = deque(maxlen=max_turns)
         self.vectorstore = vectorstore
@@ -88,11 +122,11 @@ class ConversationMemory:
         Adds a new interaction with context tracking.
 
         Args:
-            query: User's question
-            response: System's response
-            raw_context: Original RAG context if available
-            metadata: Optional metadata about the interaction
-            feedback: Optional initial feedback
+            query (str): User's question
+            response (str): System's response
+            raw_context (Optional[str]): Original RAG context if available
+            metadata (Optional[Dict]): Optional metadata about the interaction
+            feedback (Optional[bool]): Optional initial feedback
         """
         context = None
         if raw_context:
@@ -126,10 +160,10 @@ class ConversationMemory:
         3. Creates a summary focused on key concepts
 
         Args:
-            raw_context: Original RAG context from documents
+            raw_context (str): Original RAG context from documents
 
         Returns:
-            Sanitized context safe for AI collaboration
+            str: Sanitized context safe for AI collaboration
         """
         try:
             if not raw_context:
@@ -151,50 +185,50 @@ class ConversationMemory:
             return "Context available but details withheld for privacy"
 
     async def _remove_sensitive_patterns(self, text: str) -> str:
-        """Removes potentially sensitive information patterns."""
-        # Common sensitive patterns
-        patterns = {
-            'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
-            'phone': r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
-            'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
-            'ip': r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',
-            'url': r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*',
-            'path': r'(?:/[a-zA-Z0-9._-]+)+/?',
-            'id': r'\b(?:id|ID|Id)\s*[:=]\s*[a-zA-Z0-9_-]+\b'
-        }
+         """Removes potentially sensitive information patterns."""
+         # Common sensitive patterns
+         patterns = {
+             'email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
+             'phone': r'\b\d{3}[-.]?\d{3}[-.]?\d{4}\b',
+             'ssn': r'\b\d{3}-\d{2}-\d{4}\b',
+             'ip': r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b',
+             'url': r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+[^\s]*',
+             'path': r'(?:/[a-zA-Z0-9._-]+)+/?',
+             'id': r'\b(?:id|ID|Id)\s*[:=]\s*[a-zA-Z0-9_-]+\b'
+         }
 
-        sanitized = text
-        for pattern_name, pattern in patterns.items():
-            # Replace with type indicators
-            replacement = f"[{pattern_name.upper()}]"
-            sanitized = re.sub(pattern, replacement, sanitized)
+         sanitized = text
+         for pattern_name, pattern in patterns.items():
+             # Replace with type indicators
+             replacement = f"[{pattern_name.upper()}]"
+             sanitized = re.sub(pattern, replacement, sanitized)
 
-        return sanitized
+         return sanitized
 
     async def _generalize_content(self, text: str) -> str:
-        """Generalizes specific details while preserving meaning."""
-        # Patterns for specific details that should be generalized
-        generalizations = [
-            # Dates to general timeframes
-            (r'\b\d{1,2}/\d{1,2}/\d{4}\b', '[DATE]'),
-            (r'\b\d{4}-\d{2}-\d{2}\b', '[DATE]'),
+         """Generalizes specific details while preserving meaning."""
+         # Patterns for specific details that should be generalized
+         generalizations = [
+             # Dates to general timeframes
+             (r'\b\d{1,2}/\d{1,2}/\d{4}\b', '[DATE]'),
+             (r'\b\d{4}-\d{2}-\d{2}\b', '[DATE]'),
 
-            # Specific numbers to ranges
-            (r'\b\d{6,}\b', '[LARGE_NUMBER]'),
-            (r'\$\d+(?:\.\d{2})?', '[AMOUNT]'),
+             # Specific numbers to ranges
+             (r'\b\d{6,}\b', '[LARGE_NUMBER]'),
+             (r'\$\d+(?:\.\d{2})?', '[AMOUNT]'),
 
-            # Version numbers
-            (r'v\d+\.\d+(?:\.\d+)?', '[VERSION]'),
+             # Version numbers
+             (r'v\d+\.\d+(?:\.\d+)?', '[VERSION]'),
 
-            # File names
-            (r'\b[\w-]+\.(pdf|doc|docx|txt)\b', '[DOCUMENT]')
-        ]
+             # File names
+             (r'\b[\w-]+\.(pdf|doc|docx|txt)\b', '[DOCUMENT]')
+         ]
 
-        generalized = text
-        for pattern, replacement in generalizations:
-            generalized = re.sub(pattern, replacement, generalized)
+         generalized = text
+         for pattern, replacement in generalizations:
+             generalized = re.sub(pattern, replacement, generalized)
 
-        return generalized
+         return generalized
 
     async def _create_concept_summary(self, text: str) -> str:
         """
@@ -244,12 +278,12 @@ class ConversationMemory:
         Retrieves conversation history in specified format.
 
         Args:
-            turns: Number of recent turns to return (None for all)
-            format: Output format ("string" or "structured")
-            include_metadata: Whether to include turn metadata
+            turns (Optional[int]): Number of recent turns to return (None for all)
+            format (str): Output format ("string" or "structured")
+            include_metadata (bool): Whether to include turn metadata
 
         Returns:
-            Formatted conversation history
+            str | List[Dict]: Formatted conversation history
         """
         history_list = list(self.history)
         if turns:
@@ -314,8 +348,8 @@ class ConversationMemory:
         Adds user feedback to a specific conversation turn
 
         Args:
-            turn_index: Index of the turn in history
-            feedback: True for thumbs-up, False for thumbs-down
+            turn_index (int): Index of the turn in history
+            feedback (bool): True for thumbs-up, False for thumbs-down
         """
         try:
             if 0 <= turn_index < len(self.history):
@@ -344,13 +378,11 @@ class ConversationMemory:
     ) -> str:
         """
         Gets sanitized conversation context for AI collaboration
-
         Args:
-            num_turns: Number of previous turns to include
-            include_current: Whether to include current turn
-
+            num_turns (int): Number of previous turns to include
+            include_current (bool): Whether to include current turn
         Returns:
-            Formatted conversation context safe for sharing
+            str: Formatted conversation context safe for sharing
         """
         relevant_turns = list(self.history)[-num_turns:] if include_current else list(self.history)[-(num_turns+1):-1]
 
@@ -377,12 +409,12 @@ class ConversationMemory:
         Useful for maintaining context without overwhelming token limits.
 
         Args:
-            query: Current user query
-            max_turns: Maximum number of relevant turns to return
-            min_weight: Minimum weight to consider for feedback-weighted results
+            query (str): Current user query
+            max_turns (int): Maximum number of relevant turns to return
+            min_weight (float): Minimum weight to consider for feedback-weighted results
 
         Returns:
-            String of relevant conversation history
+            str: String of relevant conversation history
         """
         if not self.vectorstore:
             return self.get_history(turns=max_turns)

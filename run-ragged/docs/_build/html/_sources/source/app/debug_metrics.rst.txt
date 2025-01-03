@@ -1,0 +1,7 @@
+app.debug_metrics Module
+============================
+
+.. automodule:: app.debug_metrics
+      :members:
+      :undoc-members:
+      :show-inheritance:

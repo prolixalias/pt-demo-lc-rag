@@ -1,0 +1,238 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.debug_metrics Module &mdash; RAG Demo 0.0.209 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b5b9d494"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RAG Demo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">app.debug_metrics Module</a><ul>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics</span></code></a><ul>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.details"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.details</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.duration"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.duration</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.end_time"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.end_time</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.error"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.error</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.start_time"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.start_time</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.success"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.success</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.PhaseMetrics.to_dict"><code class="docutils literal notranslate"><span class="pre">PhaseMetrics.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics"><code class="docutils literal notranslate"><span class="pre">RAGMetrics</span></code></a><ul>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.end_phase"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.end_phase()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.get_metrics"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.get_metrics()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.log_debug_info"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.log_debug_info()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.start_phase"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.start_phase()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.track_phase"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.track_phase()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.update_llm_stats"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.update_llm_stats()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.update_retrieval_stats"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.update_retrieval_stats()</span></code></a></li>
+<li><a class="reference internal" href="#app.debug_metrics.RAGMetrics.update_token_counts"><code class="docutils literal notranslate"><span class="pre">RAGMetrics.update_token_counts()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RAG Demo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">app.debug_metrics Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/app/debug_metrics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-app.debug_metrics">
+<span id="app-debug-metrics-module"></span><h1>app.debug_metrics Module<a class="headerlink" href="#module-app.debug_metrics" title="Link to this heading"></a></h1>
+<p>Metrics Tracking Implementation Module.</p>
+<p>This module provides classes for tracking performance metrics
+within the RAG (Retrieval Augmented Generation) pipeline.
+It includes detailed timing for each processing phase, tracks
+token usage, retrieval statistics, and LLM configuration.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>PhaseMetrics:  Tracks metrics for a specific phase of processing.</p></li>
+<li><p>RAGMetrics: Manages overall metrics for the RAG pipeline.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.debug_metrics.</span></span><span class="sig-name descname"><span class="pre">PhaseMetrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time:</span> <span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">details:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.PhaseMetrics" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Metrics for a specific phase of processing.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.details">
+<span class="sig-name descname"><span class="pre">details</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.details" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.duration">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">duration</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.duration" title="Link to this definition"></a></dt>
+<dd><p>Calculate phase duration in seconds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.end_time">
+<span class="sig-name descname"><span class="pre">end_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.end_time" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.error">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.start_time" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.success">
+<span class="sig-name descname"><span class="pre">success</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.success" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.PhaseMetrics.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#app.debug_metrics.PhaseMetrics.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Returns the metrics for the phase as a dictionary</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.debug_metrics.</span></span><span class="sig-name descname"><span class="pre">RAGMetrics</span></span><a class="headerlink" href="#app.debug_metrics.RAGMetrics" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Enhanced metrics tracking for RAG pipeline</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.end_phase">
+<span class="sig-name descname"><span class="pre">end_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">success</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.end_phase" title="Link to this definition"></a></dt>
+<dd><p>End timing for a phase</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.get_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get complete metrics report</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.log_debug_info">
+<span class="sig-name descname"><span class="pre">log_debug_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.log_debug_info" title="Link to this definition"></a></dt>
+<dd><p>Log debug information with current context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.start_phase">
+<span class="sig-name descname"><span class="pre">start_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.start_phase" title="Link to this definition"></a></dt>
+<dd><p>Start timing a new phase</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.track_phase">
+<span class="sig-name descname"><span class="pre">track_phase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phase_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.track_phase" title="Link to this definition"></a></dt>
+<dd><p>Context manager for tracking phase metrics</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.update_llm_stats">
+<span class="sig-name descname"><span class="pre">update_llm_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.update_llm_stats" title="Link to this definition"></a></dt>
+<dd><p>Update LLM configuration stats</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.update_retrieval_stats">
+<span class="sig-name descname"><span class="pre">update_retrieval_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chunks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sources</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.update_retrieval_stats" title="Link to this definition"></a></dt>
+<dd><p>Update retrieval statistics</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.debug_metrics.RAGMetrics.update_token_counts">
+<span class="sig-name descname"><span class="pre">update_token_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prompt_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">completion_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.debug_metrics.RAGMetrics.update_token_counts" title="Link to this definition"></a></dt>
+<dd><p>Update token usage metrics</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 1980, Paul Talbot.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

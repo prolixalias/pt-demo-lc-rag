@@ -93,24 +93,38 @@ export const formatModelResponse = (response, options = {}) => {
 export const processRagDebugInfo = (debugInfo) => {
   if (!debugInfo) return null;
 
+  const retrievalDuration = debugInfo.phases?.retrieval?.duration || 0;
+  const generationDuration = debugInfo.phases?.generation?.duration || 0;
+
   return {
-    retrieval: {
-      documentsSearched: debugInfo.docs_searched || 0,
-      documentsReturned: debugInfo.docs_returned || 0,
-      searchTime: debugInfo.search_time || 0,
-      strategy: debugInfo.search_strategy || 'unknown'
+    chain_steps: {
+      retrieval: {
+        time: retrievalDuration,
+        chunks_retrieved: debugInfo.retrieval?.chunks_retrieved || 0,
+        avg_relevance_score: debugInfo.retrieval?.avg_relevance_score || 0,
+        sources_used: debugInfo.retrieval?.sources_used || []
+      },
+      generation: {
+        time: generationDuration,
+        details: debugInfo.phases?.generation?.details || {}
+      }
     },
-    generation: {
-      model: debugInfo.model || 'unknown',
-      promptTokens: debugInfo.prompt_tokens || 0,
-      completionTokens: debugInfo.completion_tokens || 0,
-      totalTokens: debugInfo.total_tokens || 0,
-      generationTime: debugInfo.generation_time || 0
+    metrics: {
+      total_latency: debugInfo.overall?.total_duration || 0,
+      tokens: {
+        prompt: debugInfo.tokens?.prompt || 0,
+        completion: debugInfo.tokens?.completion || 0,
+        total: debugInfo.tokens?.total || 0
+      },
+      embedding_time: debugInfo.phases?.embedding?.duration || 0
     },
-    performance: {
-      totalLatency: debugInfo.total_latency || 0,
-      cacheHit: debugInfo.cache_hit || false,
-      embeddingTime: debugInfo.embedding_time || 0
+    model: {
+      name: debugInfo.llm?.model_name || 'unknown',
+      status: {
+        model_name: debugInfo.llm?.model_name || '',
+        temperature: debugInfo.llm?.temperature || 0,
+        max_tokens: debugInfo.llm?.max_tokens || 0
+      }
     }
   };
 };

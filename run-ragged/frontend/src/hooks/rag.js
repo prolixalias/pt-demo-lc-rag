@@ -51,6 +51,7 @@ export const useAICollaboration = (settings = {}) => {
         method: 'POST',
         body: JSON.stringify(payload)
       });
+      console.log('Raw API response:', response);
       setModelStatus(prev => ({ ...prev, gemini: 'idle' }));
       return response;
     } catch (error) {

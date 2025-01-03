@@ -16,10 +16,13 @@
     "docker@27.2.0",
     "doppler@latest",
     "eza@0.20.10",
+    "fabric-ai@latest",
     "fzf@0.55.0",
+    "gcc-unwrapped@latest",
     "gcc@latest",
     "gh@2.56.0",
     "git@2.46.0",
+    "gnumake@latest",
     "go@1.23.1",
     "google-cloud-sdk@latest",
     "gum@0.13.0",
@@ -30,21 +33,24 @@
     "kubectl@1.29.3",
     "kubernetes-helm@3.14.3",
     "kyverno-chainsaw@0.2.5",
+    "nodejs@latest",
     "nushell@0.96.1",
     "pipx@latest",
-    "python311Full@latest",
-    "nodejs@latest",
     "poetry@1.8.5",
+    "pkg-config@latest",
+    "python311Full@latest",
     "ripgrep@14.1.1",
     "thefuck@3.32",
+    "tmux@latest",
     "upbound@0.24.1",
     "viddy@0.4.0",
     "vim@9.1.0707",
     "watchexec@1.25.1",
     "wget@1.24.5",
     "yq-go@4.43.1",
-    "tmux@latest",
-    "zsh@5.9"
+    "zsh@5.9",
+    "stdenv.cc.cc",
+    "stdenv.cc.cc.lib"
   ],
   "shell": {
     "init_hook": [
@@ -58,11 +64,15 @@
       "source <(doppler completion 2> /dev/null)"
     ],
     "scripts": {
-      "setup-gcloud": "gcloud auth application-default login"
+      "setup-gcloud": [
+        "gcloud auth application-default login"
+      ]
     }
   },
   "env": {
-    "PYTHONPATH": "${PWD}/run-ragged",
+    "VENV_DIR":                       "${PWD}/.venv",
+    "PYTHONPATH":                     "${PWD}/run-ragged",
+    "LD_LIBRARY_PATH":                "${PWD}/.devbox/nix/profile/default/lib",
     "GOOGLE_APPLICATION_CREDENTIALS": "${HOME}/.config/gcloud/application_default_credentials.json"
   }
 }

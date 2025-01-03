@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.conversation_memory Module &mdash; RAG Demo 0.0.209 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b5b9d494"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RAG Demo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">app.conversation_memory Module</a><ul>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext"><code class="docutils literal notranslate"><span class="pre">ConversationContext</span></code></a><ul>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext.confidence_score"><code class="docutils literal notranslate"><span class="pre">ConversationContext.confidence_score</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext.raw_context"><code class="docutils literal notranslate"><span class="pre">ConversationContext.raw_context</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext.sanitized_context"><code class="docutils literal notranslate"><span class="pre">ConversationContext.sanitized_context</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext.source_files"><code class="docutils literal notranslate"><span class="pre">ConversationContext.source_files</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationContext.to_dict"><code class="docutils literal notranslate"><span class="pre">ConversationContext.to_dict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory"><code class="docutils literal notranslate"><span class="pre">ConversationMemory</span></code></a><ul>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.add_feedback"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.add_feedback()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.add_interaction"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.add_interaction()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.clear"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.clear()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.get_context_for_collaboration"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.get_context_for_collaboration()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.get_history"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.get_history()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationMemory.get_relevant_history"><code class="docutils literal notranslate"><span class="pre">ConversationMemory.get_relevant_history()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn"><code class="docutils literal notranslate"><span class="pre">ConversationTurn</span></code></a><ul>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.adjust_weight_from_feedback"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.adjust_weight_from_feedback()</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.context"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.context</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.feedback"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.feedback</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.feedback_weight"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.feedback_weight</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.metadata"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.metadata</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.query"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.query</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.response"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.response</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.timestamp"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.timestamp</span></code></a></li>
+<li><a class="reference internal" href="#app.conversation_memory.ConversationTurn.to_dict"><code class="docutils literal notranslate"><span class="pre">ConversationTurn.to_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RAG Demo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">app.conversation_memory Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/app/conversation_memory.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-app.conversation_memory">
+<span id="app-conversation-memory-module"></span><h1>app.conversation_memory Module<a class="headerlink" href="#module-app.conversation_memory" title="Link to this heading"></a></h1>
+<p>Conversation History Management Module.</p>
+<p>This module provides classes for managing and storing conversation history,
+including options for persistence and security filtering. It’s designed
+to maintain context for AI interactions within a RAG system.</p>
+<dl class="simple">
+<dt>Key Features:</dt><dd><ul class="simple">
+<li><p>Tracks conversation context, source files, and confidence scores.</p></li>
+<li><p>Manages a fixed-size rolling window of conversation history.</p></li>
+<li><p>Supports optional persistence of conversation turns to a vector store.</p></li>
+<li><p>Implements security filtering to remove sensitive information.</p></li>
+<li><p>Provides a method to retrieve relevant history based on user feedback and embeddings.</p></li>
+</ul>
+</dd>
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>ConversationContext: Manages context for a specific interaction</p></li>
+<li><p>ConversationTurn: Represents a single interaction with metadata</p></li>
+<li><p>ConversationMemory: Manages conversation history and data persistence</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.conversation_memory.</span></span><span class="sig-name descname"><span class="pre">ConversationContext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_context:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sanitized_context:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_files:</span> <span class="pre">~typing.List[str]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_score:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.conversation_memory.ConversationContext" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tracks conversation context and source information</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext.confidence_score">
+<span class="sig-name descname"><span class="pre">confidence_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#app.conversation_memory.ConversationContext.confidence_score" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext.raw_context">
+<span class="sig-name descname"><span class="pre">raw_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.conversation_memory.ConversationContext.raw_context" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext.sanitized_context">
+<span class="sig-name descname"><span class="pre">sanitized_context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.conversation_memory.ConversationContext.sanitized_context" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext.source_files">
+<span class="sig-name descname"><span class="pre">source_files</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#app.conversation_memory.ConversationContext.source_files" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationContext.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationContext.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Returns the context as a dictionary.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.conversation_memory.</span></span><span class="sig-name descname"><span class="pre">ConversationMemory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_turns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorstore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_persistence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.conversation_memory.ConversationMemory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages conversation history with configurable size and persistence.</p>
+<p>Features:
+- Fixed-size rolling window of conversation history
+- Optional persistence to database
+- Metadata tracking for each conversation turn
+- Security filtering for sensitive content
+- Context tracking for AI collaboration</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.add_feedback">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">turn_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.add_feedback" title="Link to this definition"></a></dt>
+<dd><p>Adds user feedback to a specific conversation turn</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>turn_index</strong> (<em>int</em>) – Index of the turn in history</p></li>
+<li><p><strong>feedback</strong> (<em>bool</em>) – True for thumbs-up, False for thumbs-down</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.add_interaction">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_interaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.add_interaction" title="Link to this definition"></a></dt>
+<dd><p>Adds a new interaction with context tracking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>str</em>) – User’s question</p></li>
+<li><p><strong>response</strong> (<em>str</em>) – System’s response</p></li>
+<li><p><strong>raw_context</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Original RAG context if available</p></li>
+<li><p><strong>metadata</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>]</em>) – Optional metadata about the interaction</p></li>
+<li><p><strong>feedback</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – Optional initial feedback</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.clear" title="Link to this definition"></a></dt>
+<dd><p>Clears the conversation history</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.get_context_for_collaboration">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_context_for_collaboration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_turns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_current</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.get_context_for_collaboration" title="Link to this definition"></a></dt>
+<dd><p>Gets sanitized conversation context for AI collaboration
+:param num_turns: Number of previous turns to include
+:type num_turns: int
+:param include_current: Whether to include current turn
+:type include_current: bool</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Formatted conversation context safe for sharing</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.get_history">
+<span class="sig-name descname"><span class="pre">get_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">turns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'string'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.get_history" title="Link to this definition"></a></dt>
+<dd><p>Retrieves conversation history in specified format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>turns</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of recent turns to return (None for all)</p></li>
+<li><p><strong>format</strong> (<em>str</em>) – Output format (“string” or “structured”)</p></li>
+<li><p><strong>include_metadata</strong> (<em>bool</em>) – Whether to include turn metadata</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Formatted conversation history</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | List[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationMemory.get_relevant_history">
+<span class="sig-name descname"><span class="pre">get_relevant_history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_turns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationMemory.get_relevant_history" title="Link to this definition"></a></dt>
+<dd><p>Retrieves conversation history most relevant to current query.
+Useful for maintaining context without overwhelming token limits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>str</em>) – Current user query</p></li>
+<li><p><strong>max_turns</strong> (<em>int</em>) – Maximum number of relevant turns to return</p></li>
+<li><p><strong>min_weight</strong> (<em>float</em>) – Minimum weight to consider for feedback-weighted results</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String of relevant conversation history</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.conversation_memory.</span></span><span class="sig-name descname"><span class="pre">ConversationTurn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">response:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp:</span> <span class="pre">~datetime.datetime</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback:</span> <span class="pre">bool</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feedback_weight:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata:</span> <span class="pre">~typing.Dict</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">context:</span> <span class="pre">~app.conversation_memory.ConversationContext</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.conversation_memory.ConversationTurn" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents a single turn in the conversation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.adjust_weight_from_feedback">
+<span class="sig-name descname"><span class="pre">adjust_weight_from_feedback</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#app.conversation_memory.ConversationTurn.adjust_weight_from_feedback" title="Link to this definition"></a></dt>
+<dd><p>Adjusts the weight based on user feedback</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.context">
+<span class="sig-name descname"><span class="pre">context</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#app.conversation_memory.ConversationContext" title="app.conversation_memory.ConversationContext"><span class="pre">ConversationContext</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.context" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.feedback">
+<span class="sig-name descname"><span class="pre">feedback</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.feedback" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.feedback_weight">
+<span class="sig-name descname"><span class="pre">feedback_weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.feedback_weight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.query">
+<span class="sig-name descname"><span class="pre">query</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.query" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.response">
+<span class="sig-name descname"><span class="pre">response</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.response" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.timestamp">
+<span class="sig-name descname"><span class="pre">timestamp</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#app.conversation_memory.ConversationTurn.timestamp" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="app.conversation_memory.ConversationTurn.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="headerlink" href="#app.conversation_memory.ConversationTurn.to_dict" title="Link to this definition"></a></dt>
+<dd><p>Returns the turn data as a dictionary.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 1980, Paul Talbot.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

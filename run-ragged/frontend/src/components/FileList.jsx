@@ -2,12 +2,14 @@ import React from 'react';
 import { FileText, Calendar, XCircle } from 'lucide-react';
 import { formatFileSize, formatDate } from '../utils';
 
-export const FileList = ({
+export const FileList = React.memo(function FileList({ // <-- Named export: export const FileList = ...
   files,
   onDelete,
   loading = false,
   error = null
-}) => {
+}) {
+  console.log("FileList Rendered", { files, loading, error }); // <-- ADDED: Debug log
+
   if (loading) {
     return (
       <div className="space-y-2">
@@ -97,6 +99,4 @@ export const FileList = ({
       ))}
     </div>
   );
-};
-
-export default FileList;
+});

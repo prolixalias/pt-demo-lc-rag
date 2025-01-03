@@ -1,0 +1,286 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>app.ai_collaboration Module &mdash; RAG Demo 0.0.209 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=b5b9d494"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            RAG Demo
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">app.ai_collaboration Module</a><ul>
+<li><a class="reference internal" href="#app.ai_collaboration.AICollaborationManager"><code class="docutils literal notranslate"><span class="pre">AICollaborationManager</span></code></a><ul>
+<li><a class="reference internal" href="#app.ai_collaboration.AICollaborationManager.process_query"><code class="docutils literal notranslate"><span class="pre">AICollaborationManager.process_query()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.ai_collaboration.AIError"><code class="docutils literal notranslate"><span class="pre">AIError</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.AIResponse"><code class="docutils literal notranslate"><span class="pre">AIResponse</span></code></a><ul>
+<li><a class="reference internal" href="#app.ai_collaboration.AIResponse.content"><code class="docutils literal notranslate"><span class="pre">AIResponse.content</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.AIResponse.debug_info"><code class="docutils literal notranslate"><span class="pre">AIResponse.debug_info</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.AIResponse.error"><code class="docutils literal notranslate"><span class="pre">AIResponse.error</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.AIResponse.metadata"><code class="docutils literal notranslate"><span class="pre">AIResponse.metadata</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory"><code class="docutils literal notranslate"><span class="pre">ErrorCategory</span></code></a><ul>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.API_ERROR"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.API_ERROR</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.CONTEXT_ERROR"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.CONTEXT_ERROR</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.INVALID_INPUT"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.INVALID_INPUT</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.RATE_LIMIT"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.RATE_LIMIT</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.TOKEN_LIMIT"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.TOKEN_LIMIT</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.ErrorCategory.UNKNOWN"><code class="docutils literal notranslate"><span class="pre">ErrorCategory.UNKNOWN</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.ai_collaboration.GeminiError"><code class="docutils literal notranslate"><span class="pre">GeminiError</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.GrokError"><code class="docutils literal notranslate"><span class="pre">GrokError</span></code></a></li>
+<li><a class="reference internal" href="#app.ai_collaboration.PersonaManager"><code class="docutils literal notranslate"><span class="pre">PersonaManager</span></code></a><ul>
+<li><a class="reference internal" href="#app.ai_collaboration.PersonaManager.get_persona_prompt"><code class="docutils literal notranslate"><span class="pre">PersonaManager.get_persona_prompt()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#app.ai_collaboration.SynthesisError"><code class="docutils literal notranslate"><span class="pre">SynthesisError</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">RAG Demo</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">app.ai_collaboration Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/source/app/ai_collaboration.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-app.ai_collaboration">
+<span id="app-ai-collaboration-module"></span><h1>app.ai_collaboration Module<a class="headerlink" href="#module-app.ai_collaboration" title="Link to this heading"></a></h1>
+<p>AI Collaboration Logic with Gemini and Grok.</p>
+<p>This module encapsulates the logic for AI collaboration, integrating Google’s Gemini LLM
+and Grok’s real-time information capabilities. It manages response generation,
+data synthesis, and error handling within a Retrieval Augmented Generation (RAG) system.</p>
+<dl class="simple">
+<dt>Key Components:</dt><dd><ul class="simple">
+<li><p>Gemini LLM: Provides general question-answering and text generation.</p></li>
+<li><p>Grok LLM: Provides real-time information and perspectives.</p></li>
+<li><p>Conversation Memory: Manages conversation history for context.</p></li>
+<li><p>RAGMetrics: Tracks key metrics during processing.</p></li>
+<li><p>Error Handling: Standardizes error responses for better handling.</p></li>
+<li><p>Persona Management: Ensures a consistent tone and style for AI responses.</p></li>
+<li><p>Asynchronous Operations: Uses asyncio for non-blocking processing.</p></li>
+<li><p>JSON parsing/repair: Includes error handling for malformed or incomplete JSON responses</p></li>
+</ul>
+</dd>
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>AIResponse: Data structure for AI responses.</p></li>
+<li><p>PersonaManager: Manages the persona used in LLM interactions.</p></li>
+<li><p>AICollaborationManager: Orchestrates interactions between Gemini and Grok.</p></li>
+</ul>
+</dd>
+<dt>Exceptions:</dt><dd><ul class="simple">
+<li><p>AIError: Base exception class for AI-related errors.</p></li>
+<li><p>GeminiError: Exception for errors specific to Gemini.</p></li>
+<li><p>GrokError: Exception for errors specific to Grok.</p></li>
+<li><p>SynthesisError: Exception for errors during synthesis of responses.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="app.ai_collaboration.AICollaborationManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">AICollaborationManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conversation_memory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gemini_llm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VertexAI</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grok_api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt_template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PromptTemplate</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="server.html#app.indexer.DatabaseManager" title="app.indexer.DatabaseManager"><span class="pre">DatabaseManager</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vectorstore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">MetricsTrackingVectorStore</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">persona_manager</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#app.ai_collaboration.PersonaManager" title="app.ai_collaboration.PersonaManager"><span class="pre">PersonaManager</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.ai_collaboration.AICollaborationManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Orchestrates interactions between Gemini and Grok for query processing.
+This class handles the retrieval, generation, and synthesis of responses using
+both large language models, including error handling and metrics collection.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.ai_collaboration.AICollaborationManager.process_query">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">process_query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_context</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#app.ai_collaboration.AIResponse" title="app.ai_collaboration.AIResponse"><span class="pre">AIResponse</span></a></span></span><a class="headerlink" href="#app.ai_collaboration.AICollaborationManager.process_query" title="Link to this definition"></a></dt>
+<dd><p>Process a query through the RAG pipeline with fallback to realtime data</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">AIError</span></span><a class="headerlink" href="#app.ai_collaboration.AIError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base exception class for AI-related errors.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIResponse">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">AIResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">error</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.ai_collaboration.AIResponse" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Data structure for AI responses.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIResponse.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#app.ai_collaboration.AIResponse.content" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIResponse.debug_info">
+<span class="sig-name descname"><span class="pre">debug_info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.ai_collaboration.AIResponse.debug_info" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIResponse.error">
+<span class="sig-name descname"><span class="pre">error</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#app.ai_collaboration.AIResponse.error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.AIResponse.metadata">
+<span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#app.ai_collaboration.AIResponse.metadata" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">ErrorCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names=&lt;not</span> <span class="pre">given&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary=None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.ai_collaboration.ErrorCategory" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>Enumeration of error categories for better classification and handling.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.API_ERROR">
+<span class="sig-name descname"><span class="pre">API_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'api_error'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.API_ERROR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.CONTEXT_ERROR">
+<span class="sig-name descname"><span class="pre">CONTEXT_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'context_error'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.CONTEXT_ERROR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.INVALID_INPUT">
+<span class="sig-name descname"><span class="pre">INVALID_INPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'invalid_input'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.INVALID_INPUT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.RATE_LIMIT">
+<span class="sig-name descname"><span class="pre">RATE_LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'rate_limit'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.RATE_LIMIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.TOKEN_LIMIT">
+<span class="sig-name descname"><span class="pre">TOKEN_LIMIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'token_limit'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.TOKEN_LIMIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="app.ai_collaboration.ErrorCategory.UNKNOWN">
+<span class="sig-name descname"><span class="pre">UNKNOWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'unknown'</span></em><a class="headerlink" href="#app.ai_collaboration.ErrorCategory.UNKNOWN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="app.ai_collaboration.GeminiError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">GeminiError</span></span><a class="headerlink" href="#app.ai_collaboration.GeminiError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#app.ai_collaboration.AIError" title="app.ai_collaboration.AIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AIError</span></code></a></p>
+<p>Exception for errors specific to Gemini.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="app.ai_collaboration.GrokError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">GrokError</span></span><a class="headerlink" href="#app.ai_collaboration.GrokError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#app.ai_collaboration.AIError" title="app.ai_collaboration.AIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AIError</span></code></a></p>
+<p>Exception for errors specific to Grok.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="app.ai_collaboration.PersonaManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">PersonaManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#app.ai_collaboration.PersonaManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Manages consistent persona across responses</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="app.ai_collaboration.PersonaManager.get_persona_prompt">
+<span class="sig-name descname"><span class="pre">get_persona_prompt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#app.ai_collaboration.PersonaManager.get_persona_prompt" title="Link to this definition"></a></dt>
+<dd><p>Generates a consistent persona prompt.
+:returns: A prompt to provide context to the LLMs about their persona
+:rtype: str</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="app.ai_collaboration.SynthesisError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">app.ai_collaboration.</span></span><span class="sig-name descname"><span class="pre">SynthesisError</span></span><a class="headerlink" href="#app.ai_collaboration.SynthesisError" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#app.ai_collaboration.AIError" title="app.ai_collaboration.AIError"><code class="xref py py-class docutils literal notranslate"><span class="pre">AIError</span></code></a></p>
+<p>Exception for errors during synthesis of responses.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 1980, Paul Talbot.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,12 +1,36 @@
 import React, { useState } from 'react';
-import { X, Bug, Thermometer, MessageSquare } from 'lucide-react';
+import { X, Bug, Trash2, AlertCircle ,Thermometer, MessageSquare } from 'lucide-react';
+import { toast } from 'react-toastify';
 
-const CollaborationSettings = ({
-  initialSettings,
-  onSave,
-  onClose
-}) => {
+export const CollaborationSettings = ({ initialSettings, onSave, onClose }) => { // <-- Named export
   const [localSettings, setLocalSettings] = useState(initialSettings);
+
+  const handleReset = async () => {
+    if (!localSettings.debug_mode) {
+      return; // Safety check
+    }
+  
+    if (confirm('WARNING: This will delete all embeddings data. This action cannot be undone. Are you sure?')) {
+      try {
+        const response = await fetch('/debug/reset-embeddings', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ debug_mode: true })
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Reset failed: ${response.statusText}`);
+        }
+  
+        const result = await response.json();
+        onToastCallback?.('Database reset completed successfully');
+      } catch (error) {
+        onToastCallback?.(`Reset failed: ${error.message}`, { type: 'error' });
+      }
+    }
+  };
 
   // Helper function for temperature inputs
   const TemperatureInput = ({ label, value, onChange, description }) => (
@@ -29,6 +53,15 @@ const CollaborationSettings = ({
       )}
     </div>
   );
+
+  const handleSave = () => {
+    onSave(localSettings);
+    toast.success('Settings updated successfully');
+    setTimeout(() => {
+      onClose();
+    }, 100);
+
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -151,6 +184,29 @@ const CollaborationSettings = ({
           </div>
         </div>
 
+        {localSettings.debug_mode && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-medium text-red-600 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5" />
+                  Debug Actions
+                </h3>
+                <p className="text-sm text-gray-500 mt-1">
+                  Danger zone: These actions can affect system data
+                </p>
+              </div>
+              <button
+                onClick={handleReset}
+                className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <Trash2 className="w-4 h-4" />
+                Reset Embeddings
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={onClose}
@@ -159,7 +215,7 @@ const CollaborationSettings = ({
             Cancel
           </button>
           <button
-            onClick={() => onSave(localSettings)}
+            onClick={handleSave}
             className="px-4 py-2 text-sm bg-[#006838] text-white rounded-lg hover:bg-[#004D2C]"
           >
             Save Changes
@@ -170,4 +226,4 @@ const CollaborationSettings = ({
   );
 };
 
-export default CollaborationSettings;
+// export default CollaborationSettings;
