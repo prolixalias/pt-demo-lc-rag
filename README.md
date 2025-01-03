@@ -1,5 +1,6 @@
 # run-ragged
 
+## lanchain flow
 ```mermaid
 flowchart TD
     %% User Input and Initial Processing
@@ -49,6 +50,55 @@ flowchart TD
     class F,G api
     class L config
     class B,D,H process
+```
+## python class diagram
+```mermaid
+classDiagram
+    class AICollaborationManager {
+        -ConversationMemory memory
+        -VertexAI gemini
+        -ChatXAI grok
+        -PromptTemplate template
+        +process_query()
+        -_get_gemini_response()
+        -_get_grok_perspective()
+        -_synthesize_response()
+    }
+    
+    class ConversationMemory {
+        -deque history
+        -PGVector vectorstore
+        +add_interaction()
+        +get_history()
+        +get_context_for_collaboration()
+        -_sanitize_context()
+    }
+    
+    class FastAPIServer {
+        +query_documents()
+        +upload_pdf()
+        +list_files()
+        +reindex_documents()
+    }
+    
+    class IndexerService {
+        +process_pdf()
+        +index_pdfs()
+        +add_embeddings()
+    }
+    
+    class MetricsTracker {
+        +start_phase()
+        +end_phase()
+        +update_search_metrics()
+        +finalize()
+    }
+
+    AICollaborationManager --> ConversationMemory
+    FastAPIServer --> AICollaborationManager
+    FastAPIServer --> IndexerService
+    IndexerService --> ConversationMemory
+    AICollaborationManager --> MetricsTracker
 ```
 
 ## development packages
