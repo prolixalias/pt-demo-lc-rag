@@ -40,7 +40,7 @@ import asyncio
 import httpx
 import logging.config
 import os
-import pg8000
+# import pg8000
 import random
 import tempfile
 import time
@@ -53,6 +53,7 @@ from datetime import datetime
 from fastapi import FastAPI, UploadFile, HTTPException, Response, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse, FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 from google.cloud import storage
 from google.cloud.sql.connector import Connector, IPTypes
 from langchain_community.vectorstores.pgvector import PGVector
@@ -68,10 +69,10 @@ from typing import Optional, Dict, List, Any, Tuple, Final
 from app.logging_config import setup_logging
 
 # Project name for theme/persona
-with open("pyproject.toml", "rb") as f:  # binary required to parse file as UTF-8 with universal newlines disabled
+with open("/code/pyproject.toml", "rb") as f: # binary required to parse file as UTF-8 with universal newlines disabled
     project_metadata = tomllib.load(f)
 project_name = project_metadata["tool"]["poetry"]["name"]
-project = project_name.title()  # Albear / Twig / Etc
+project = project_name.title()  # Albear / Twig / Etc - just add an image to frontend
 
 # Environment-based configuration
 CIRCUIT_BREAKER_FAILURE_THRESHOLD: Final = int(os.getenv('CIRCUIT_BREAKER_FAILURE_THRESHOLD', 3))
@@ -94,8 +95,12 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI application with Cross-Origin Resource Sharing (CORS) settings.
 app = FastAPI(
     title="RAG API Service",
-    docs_url="/api" # This is important since the default is /docs which conflicts with sphinx
+    docs_url="/api" # This is important since the default is /docs which conflicts with sphinx:
 )
+
+# app.mount("/docs", StaticFiles(directory="docs/_build/html", html=True), name="sphinx-docs")
+app.mount("/docs", StaticFiles(directory="/code/frontend/dist/docs", html=True), name="sphinx-docs")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allow all origins for testing. In production, specify the origins
